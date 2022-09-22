@@ -1,9 +1,12 @@
+
+#! /usr/bin/env python3
+
 import os
 import requests
 
 KEYS = ['title', 'name', 'date', 'feedback']
-URL = 'http://<corpweb-external-IP>/feedback'
-PATH_TO_REVIEWS = ''
+URL = 'http://34.70.137.218/feedback/'
+PATH_TO_REVIEWS = '/data/feedback/'
 
 def review_to_dict(path):
     list_of_feedback = []
@@ -24,17 +27,17 @@ def review_to_dict(path):
     return list_of_feedback
 
 def post_feedback(list_of_feedback):
-    for feedback_dict in list_of_feedback:
-        response = requests.post(URL , data=feedback_dict)
-        print(f"status: {response.status_code()}, text = {response.text()}")
+    response = requests.post(URL , data=list_of_feedback)
+    if not response.ok:
+        raise Exception("GET failed with status code {}".format(response.status_code))
+    print(f"status: {response.status_code}, text = {response.text}")
 
 
 def main():
     list_of_feedback = review_to_dict(PATH_TO_REVIEWS)
-    post_feedback(list_of_feedback)
+#    print(list_of_feedback)
+    for feedback_dict in list_of_feedback:
+        post_feedback(feedback_dict)
     print("finished")
 
 main()
-
-
-#print(review_to_dict('reviews/'))
